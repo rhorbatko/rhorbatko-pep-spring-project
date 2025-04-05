@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.entity.Account;
+import com.example.exception.AccountLoginException;
 import com.example.exception.AccountRegistrationException;
 import com.example.exception.DuplicateUserException;
 import com.example.service.AccountService;
@@ -38,6 +39,11 @@ public class SocialMediaController {
         return ResponseEntity.status(200).body(accountService.register(account));
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<Account> login(@RequestBody Account account) throws AccountLoginException{
+        return ResponseEntity.status(200).body(accountService.login(account));
+    }
+
     @ExceptionHandler(AccountRegistrationException.class)
     public ResponseEntity<String> handleAccountRegistrationException(AccountRegistrationException ex){
         return ResponseEntity.status(400).body(ex.getMessage());
@@ -46,6 +52,11 @@ public class SocialMediaController {
     @ExceptionHandler(DuplicateUserException.class)
     public ResponseEntity<String> handleDuplicateUserException(DuplicateUserException ex){
         return ResponseEntity.status(409).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(AccountLoginException.class)
+    public ResponseEntity<String> handleAccountLoginException(AccountLoginException ex){
+        return ResponseEntity.status(401).body(ex.getMessage());
     }
 
 

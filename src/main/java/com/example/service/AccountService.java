@@ -5,7 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.repository.AccountRepository;
 import com.example.entity.Account;
-import com.example.exception.*;
+import com.example.exception.AccountRegistrationException;
+import com.example.exception.AccountLoginException;
+import com.example.exception.DuplicateUserException;
 
 @Service
 public class AccountService {
@@ -39,6 +41,15 @@ public class AccountService {
         validateUsername(account.getUsername());
         validatePassword(account.getPassword());
         return accountRepository.save(account);
+    }
+
+    public Account login(Account account) throws AccountLoginException{
+        Optional<Account> accountToLogin = accountRepository.findByUsernameAndPassword(account.getUsername(),account.getPassword());
+        if(accountToLogin.isPresent()){
+            return accountToLogin.get();
+        }else{
+            throw new AccountLoginException("Unauthorized. Check your login credentials.");
+        }
     }
 
     
