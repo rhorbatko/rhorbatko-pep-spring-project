@@ -35,10 +35,10 @@ public class AccountService {
     }
 
     public Account register(Account account) throws AccountRegistrationException, DuplicateUserException{
-           
+
         validateUsername(account.getUsername());
         validatePassword(account.getPassword());
-        return (Account)accountRepository.save(account);
+        return accountRepository.save(account);
     }
 
     
