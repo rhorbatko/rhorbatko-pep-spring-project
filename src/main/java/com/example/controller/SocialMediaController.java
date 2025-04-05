@@ -1,20 +1,14 @@
 package com.example.controller;
 import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.entity.Account;
-import com.example.exception.AccountLoginException;
-import com.example.exception.AccountRegistrationException;
-import com.example.exception.DuplicateUserException;
-import com.example.service.AccountService;
+import com.example.entity.*;
+import com.example.exception.*;
+import com.example.service.*;
 
 
 
@@ -28,10 +22,12 @@ import com.example.service.AccountService;
 public class SocialMediaController {
     
     private final AccountService accountService;
+    private final MessageService messageService;
 
     @Autowired
-    public SocialMediaController(AccountService accountService){
+    public SocialMediaController(AccountService accountService, MessageService messageService){
         this.accountService = accountService;
+        this.messageService = messageService;
     }
 
     @PostMapping("/register")
@@ -42,6 +38,11 @@ public class SocialMediaController {
     @PostMapping("/login")
     public ResponseEntity<Account> login(@RequestBody Account account) throws AccountLoginException{
         return ResponseEntity.status(200).body(accountService.login(account));
+    }
+
+    @PostMapping("/messages")
+    public ResponseEntity<Message> createMessage(@RequestBody Message newMessage) throws MessageException{
+        return ResponseEntity.status(200).body(messageService.createMessage(newMessage));
     }
 
     @ExceptionHandler(AccountRegistrationException.class)
@@ -57,6 +58,11 @@ public class SocialMediaController {
     @ExceptionHandler(AccountLoginException.class)
     public ResponseEntity<String> handleAccountLoginException(AccountLoginException ex){
         return ResponseEntity.status(401).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(MessageException.class)
+    public ResponseEntity<String> handleMessageException(MessageException ex){
+        return ResponseEntity.status(400).body(ex.getMessage());
     }
 
 
