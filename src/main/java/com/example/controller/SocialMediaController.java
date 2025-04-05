@@ -3,6 +3,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,6 +12,7 @@ import com.example.entity.*;
 import com.example.exception.*;
 import com.example.service.*;
 import java.util.List;
+import java.util.Optional;
 
 
 
@@ -50,6 +52,18 @@ public class SocialMediaController {
     @GetMapping("/messages")
     public ResponseEntity<List<Message>> getAllMessages(){
         return ResponseEntity.status(200).body(messageService.getAllMessages());
+    }
+
+    @GetMapping("/messages/{message_id}")
+    public ResponseEntity<Message> getMessagesById(@PathVariable Integer message_id){
+        Optional<Message> response = messageService.getMessageById(message_id);
+
+        if(response.isPresent()){
+
+            return ResponseEntity.status(200).body(response.get());
+        }
+        return ResponseEntity.status(200).build();
+        
     }
 
     @ExceptionHandler(AccountRegistrationException.class)

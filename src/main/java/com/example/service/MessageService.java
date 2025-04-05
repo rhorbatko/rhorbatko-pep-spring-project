@@ -8,6 +8,7 @@ import com.example.repository.AccountRepository;
 import com.example.repository.MessageRepository;
 import com.example.exception.MessageException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MessageService {
@@ -41,6 +42,17 @@ public class MessageService {
 
     public List<Message> getAllMessages(){
         return messageRepository.findAll();
+    }
+
+    public Optional<Message> getMessageById(Integer message_id){
+
+        Optional<Message> message = messageRepository.findById(message_id);
+        if (message.isEmpty()){
+            return Optional.empty();
+        }else{
+            return message;
+        }
+
     }
 
 
