@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -67,7 +68,7 @@ public class SocialMediaController {
         
     }
     @DeleteMapping("/messages/{message_id}")
-    public ResponseEntity<Integer> deleteMessagesById(@PathVariable Integer message_id){
+    public ResponseEntity<Integer> deleteMessageById(@PathVariable Integer message_id){
         Integer numOfRowsAffected = messageService.deleteMessageById(message_id);
 
         if(numOfRowsAffected != null){
@@ -75,6 +76,14 @@ public class SocialMediaController {
         }
         return ResponseEntity.status(200).build();
         
+    }
+
+    @PatchMapping("/messages/{message_id}")
+    public ResponseEntity<Integer> patchMessageById(@PathVariable Integer message_id, @RequestBody String message_text) throws MessageException{
+        Integer numOfRowsAffected = messageService.patchMessageById(message_id, message_text);
+
+        return ResponseEntity.status(200).body(numOfRowsAffected);
+            
     }
 
     @ExceptionHandler(AccountRegistrationException.class)
