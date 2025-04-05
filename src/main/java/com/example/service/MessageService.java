@@ -7,6 +7,7 @@ import com.example.entity.Message;
 import com.example.repository.AccountRepository;
 import com.example.repository.MessageRepository;
 import com.example.exception.MessageException;
+import java.util.List;
 
 @Service
 public class MessageService {
@@ -36,6 +37,10 @@ public class MessageService {
     public Message createMessage(Message newMessage) throws MessageException{
         validateMessage(newMessage);
         return messageRepository.save(newMessage);
+    }
+
+    public List<Message> getAllMessages(){
+        return messageRepository.findAll();
     }
 
 
