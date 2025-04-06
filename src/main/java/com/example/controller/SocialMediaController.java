@@ -79,10 +79,18 @@ public class SocialMediaController {
     }
 
     @PatchMapping("/messages/{message_id}")
-    public ResponseEntity<Integer> patchMessageById(@PathVariable Integer message_id, @RequestBody String message_text) throws MessageException{
-        Integer numOfRowsAffected = messageService.patchMessageById(message_id, message_text);
+    public ResponseEntity<Integer> patchMessageById(@PathVariable Integer message_id, @RequestBody Message message) throws MessageException{
+        Integer numOfRowsAffected = messageService.patchMessageById(message_id, message);
 
         return ResponseEntity.status(200).body(numOfRowsAffected);
+            
+    }
+
+    @GetMapping("/accounts/{account_id}/messages")
+    public ResponseEntity<List<Message>> getMessagesByAccountId(@PathVariable Integer account_id){
+        List<Message> messages = messageService.getMessagesByAccountId(account_id);
+
+        return ResponseEntity.status(200).body(messages);
             
     }
 

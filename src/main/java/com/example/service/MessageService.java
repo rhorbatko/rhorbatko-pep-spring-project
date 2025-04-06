@@ -35,11 +35,13 @@ public class MessageService {
         }
     }
 // validating incoming updates to a message
-    public void validateMessage(String message_text, Integer message_id) throws MessageException{
+    public void validateMessage(Message message, Integer message_id) throws MessageException{
+        String message_text = message.getMessageText();
+
         if(!messageRepository.existsById(message_id)){
             throw new MessageException("message does not exist");
         }
-        if(message_text == null || message_text.strip().length() == 0){
+        if(message_text == null || message_text.length() == 0){
             throw new MessageException("message can not be blank!");
         }
         if(message_text.length()>=255){
@@ -76,12 +78,16 @@ public class MessageService {
         return null;
     }
 
-    public Integer patchMessageById(Integer message_id, String message_text) throws MessageException{
-        validateMessage(message_text, message_id);
+    public Integer patchMessageById(Integer message_id, Message message) throws MessageException{
+        validateMessage(message, message_id);
         Message messageToUpdate = messageRepository.getById(message_id);
-        messageToUpdate.setMessageText(message_text);
+        messageToUpdate.setMessageText(message.getMessageText());
         messageRepository.save(messageToUpdate);
         return 1;
+    }
+
+    public List<Message> getMessagesByAccountId(Integer account_id){
+        return messageRepository.findByPostedBy(account_id);
     }
 
 
